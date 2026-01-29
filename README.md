@@ -1,19 +1,21 @@
 # cumulocity-skills
 
 Machine-readable Agent Skills with modular guidance, examples, and best practices you can add to your agent.
-Currently consisting of:
-- c8y-ui for Cumulocity web development 
 
 ---
-## Skill c8y-ui
+
+## Available Skills
+
+| Skill | Path | Summary |
+|---|---:|---|
+| Frontend layout & references | `skills/c8y-ui/SKILL.md` | Codex-aligned project scaffolding, layout rules, icons, forms, pipes. |
+
+---
 
 ### Purpose & Advantages
 
-- Single source of pragmatic, Codex-aligned guidance for Cumulocity web UI (layout, forms, icons, pipes, project setup). ✅
-- Speeds onboarding and reduces mistakes by providing tested patterns and LTS recommendations. ⚡
 - Enables AI agents to generate consistent, accessible code that follows Cumulocity conventions. 🤖
 - Easy to extend: add new skills as features or patterns evolve. ✨
-
 ---
 
 ## Quick install
@@ -35,13 +37,6 @@ npx skills add Cumulocity-IoT/cumulocity-skills
 
 ---
 
-## Available Skills
-
-| Skill | Path | Summary |
-|---|---:|---|
-| Frontend layout & references | `skills/c8y-ui/SKILL.md` | Codex-aligned project scaffolding, layout rules, icons, forms, pipes. |
-
----
 
 ## References
 
