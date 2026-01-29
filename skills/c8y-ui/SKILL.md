@@ -2,11 +2,6 @@
 name: c8y-ui
 description: Guides developers to scaffold new projects e.g. to develop plugins, and implement clean, consistent HTML layouts aligned with the Cumulocity Codex design system foundations.
 compatibility: Requires Node.js and Angular CLI installed. Can be used in any OS terminal.
-metadata:
-  references:
-    - "https://cumulocity.com/docs/web/gettingstarted/"
-    - "https://github.com/Cumulocity-IoT/tutorial"
-    - "https://cumulocity.com/codex/
 allowed-tools: terminal browser
 ---
 
