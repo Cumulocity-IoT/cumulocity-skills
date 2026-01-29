@@ -55,12 +55,6 @@ Cumulocity Codex design system.
 - Avoid arbitrary margin values
 - Do not rely on absolute positioning for layout
 
-### Vertical rhythm guidance
-
-- Spacing values must repeat consistently
-- Headings, paragraphs, and components should align visually
-- Avoid deeply nested layout wrappers
-
 ---
 
 ## Elevation and Shadows
