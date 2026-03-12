@@ -1,18 +1,17 @@
 # cumulocity-skills
 
 Machine-readable Agent Skills with modular guidance, examples, and best practices you can add to your agent.
-Currently consisting of:
-- c8y-ui for Cumulocity web development 
+Currently consisting of skills for Cumulocity upgrade planning, migration analysis, changelog review, and code quality analysis.
 
 ---
-## Skill c8y-ui
+## Purpose
 
-### Purpose & Advantages
+### Advantages
 
-- Single source of pragmatic, Codex-aligned guidance for Cumulocity web UI (layout, forms, icons, pipes, project setup). ✅
-- Speeds onboarding and reduces mistakes by providing tested patterns and LTS recommendations. ⚡
-- Enables AI agents to generate consistent, accessible code that follows Cumulocity conventions. 🤖
-- Easy to extend: add new skills as features or patterns evolve. ✨
+- Centralized guidance for Web SDK upgrades and `@c8y/client` migration impact analysis.
+- Repeatable analysis flow that starts from changelogs and version-specific upgrade notes.
+- Better audit quality by combining API references, version mapping, and code quality checks.
+- Modular skill set that can be extended with new version guides and analysis workflows.
 
 ---
 
@@ -30,8 +29,10 @@ npx skills add Cumulocity-IoT/cumulocity-skills
 
 3. Example agent prompts:
 
-- "Use `/c8y-ui` to create a responsive Angular form for Device Registration with fields: deviceName (text, required), deviceType (select), firmwareVersion (text), and supportFiles (file-picker). Provide the HTML template and brief validation rules."
-- "Use `/c8y-ui` to refactor this view to follow Codex foundations (typography, grid, spacing)."
+- "Use `/c8y-client-migration-analysis` to audit this Angular project for a target Web SDK 1023 upgrade and produce a breaking-change impact matrix."
+- "Use `/websdk-1023-upgrade` and `/websdk-breaking-changelog` to list required code changes and potential regressions for this app."
+- "Use `/c8y-client-api` to map `InventoryService` and `MeasurementService` calls in this file to their REST endpoints."
+- "Use `/code-quality-analysis` to review these changed Angular files and report anti-patterns with fixes."
 
 ---
 
@@ -39,14 +40,39 @@ npx skills add Cumulocity-IoT/cumulocity-skills
 
 | Skill | Path | Summary |
 |---|---:|---|
-| Frontend layout & references | `skills/c8y-ui/SKILL.md` | Codex-aligned project scaffolding, layout rules, icons, forms, pipes. |
+| C8Y Client API Reference | `skills/c8y-client-api/SKILL.md` | `@c8y/client` services, methods, and endpoint usage patterns. |
+| C8Y Client Breaking Changelog | `skills/c8y-client-breaking-changelog/SKILL.md` | Breaking changes in `@c8y/client` across versions. |
+| C8Y Client Migration Analysis | `skills/c8y-client-migration-analysis/SKILL.md` | Step-by-step migration audit workflow and impact classification. |
+| Code Quality Analysis | `skills/code-quality-analysis/SKILL.md` | Angular + Cumulocity quality checks and anti-pattern detection. |
+| Web SDK 1018 Upgrade | `skills/websdk-1018-upgrade/SKILL.md` | Version-specific guidance for upgrading to Web SDK 1018. |
+| Web SDK 1019 Upgrade | `skills/websdk-1019-upgrade/SKILL.md` | Version-specific guidance for upgrading to Web SDK 1019. |
+| Web SDK 1020 Upgrade | `skills/websdk-1020-upgrade/SKILL.md` | Version-specific guidance for upgrading to Web SDK 1020. |
+| Web SDK 1021 Upgrade | `skills/websdk-1021-upgrade/SKILL.md` | Version-specific guidance for upgrading to Web SDK 1021. |
+| Web SDK 1022 Upgrade | `skills/websdk-1022-upgrade/SKILL.md` | Version-specific guidance for upgrading to Web SDK 1022. |
+| Web SDK 1023 Upgrade | `skills/websdk-1023-upgrade/SKILL.md` | Version-specific guidance for upgrading to Web SDK 1023. |
+| Web SDK Breaking Changelog | `skills/websdk-breaking-changelog/SKILL.md` | Breaking changes for Web SDK / `@c8y/ngx-components`. |
+| Web SDK Version Map | `skills/websdk-version-map/SKILL.md` | Version mapping context used during upgrade planning. |
+
+---
+
+## Agent Workflow
+
+Use the analysis skills as entry points, because they reference and orchestrate the other skills:
+
+1. Start with `c8y-client-migration-analysis` for upgrade impact and migration audits.
+2. Use version-specific `websdk-10xx-upgrade` and changelog skills to confirm required changes.
+3. Validate API usage with `c8y-client-api` and version compatibility with `websdk-version-map`.
+4. Run `code-quality-analysis` on changed files before finalizing recommendations.
+
+See `agents.md` for a concise structure-first guide.
 
 ---
 
 ## References
 
 - https://cumulocity.com/docs/web/gettingstarted/
-- https://cumulocity.com/codex/
+- https://www.npmjs.com/package/@c8y/client
+- https://www.npmjs.com/package/@c8y/ngx-components
 - https://agentskills.io/specification
 
 ---
