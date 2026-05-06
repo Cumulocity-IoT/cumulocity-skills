@@ -276,7 +276,7 @@ ngOnInit(): void {
 ### AP-10 · Using `FetchClient` for Calls Covered by `@c8y/client`
 
 **Rule:** Never use Angular's `HttpClient` or `FetchClient` for Cumulocity REST API calls
-that are already wrapped by a service in `@c8y/client`.
+that are already wrapped by a service in `@c8y/client`. Only ok if used for microservice queries (baseUrl contains `/service`).
 
 Consult the `c8y-client-api` skill (`skills/c8y-client-api/SKILL.md`) for the full list
 of covered domains: inventory, alarms, events, measurements, operations, binary, users, …
@@ -304,7 +304,7 @@ async getDevice(id: string) {
 ### AP-11 · Eager-Loading Widget / Plugin Modules
 
 **Rule:** Widget plugin modules that are registered via the C8Y hook mechanism must use
-**lazy loading** so they are only downloaded when needed.
+**lazy loading** so they are only downloaded when needed. Implies configuring components as standalone: true.
 
 - Use `loadComponent` instead of `component`
 - Use `loadConfigComponent` instead of `configComponent`
@@ -668,6 +668,157 @@ providers: [
 
 ---
 
+### AP-21 · Public Methods and Properties Not Used in Templates
+
+**Rule:** Every `public` method or property on a component must be referenced in its
+template (HTML). All other methods/properties must be `private` (or `protected`
+if used by subclasses).
+
+**Signals of violation:**
+- `public method(): void { … }` that is never called in the template
+- `public isLoading = false;` that is never read in the template (should be `private`)
+- Helper methods visible as `public` because they were not explicitly marked `private`
+
+**Detection strategy:**
+- Search the template (`.component.html`) for references to each method/property name
+- If not found, the method/property should be `private`
+- Use IDE symbol search to verify; if the IDE shows zero template references, mark it `private`
+
+```typescript
+// BAD — public method never called from the template
+@Component({ … })
+export class SensorComponent {
+  public title = 'Sensors';
+  public formatValue(val: number): string { return val.toFixed(2); }  // template uses the pipe instead
+  public calculateThreshold(): number { … }  // internal logic, not in template
+}
+
+// GOOD — only public if used in template; otherwise private
+@Component({ … })
+export class SensorComponent {
+  public title = 'Sensors';  // referenced in template: {{ title }}
+  private formatValue(val: number): string { … }  // not in template; use a pipe instead or call from a template-bound method
+  private calculateThreshold(): number { … }  // internal helper, never called from template
+  
+  // Template-bound event handler — public because it's called from template (click)="onUpdate()"
+  public onUpdate(): void { … }
+}
+```
+
+```html
+<!-- Corresponding template -->
+<h1>{{ title }}</h1>
+<button (click)="onUpdate()">Update</button>
+```
+
+**Refactoring guide:**
+
+1. **Method called from template** (event handler, `| async`, interpolation) → keep `public`
+2. **Method used only internally by other methods** → mark `private`
+3. **Property bound in template** (interpolation, property binding) → keep `public`
+4. **Property for internal state** (not in template) → mark `private`
+
+---
+
+### AP-22 · Overriding Private APIs from @c8y/ngx-components
+
+**Severity: High (Technical Debt)**
+
+**Rule:** Do not access or override private methods, properties, or internal APIs from
+`@c8y/ngx-components`, `@c8y/client`, or any other third-party library. Private APIs are
+not guaranteed to remain stable across patch versions and can break your code without
+notice.
+
+**Exception:** If extending a component or service from `@c8y/ngx-components` genuinely
+requires accessing a private member, this is **only acceptable as a last resort** when:
+- The public API does not provide a way to achieve the requirement
+- An issue has been filed with Cumulocity requesting the feature as public
+- The override is clearly documented with `// TODO:` and `assert()` to detect
+  future breakage
+
+**Signals of violation:**
+- Accessing a property prefixed with `_` (e.g. `this._internalState`, `component._cache`)
+- Calling methods that are not documented in the public API
+- Casting to `any` to bypass TypeScript's access checks for private members
+- Using `Object.defineProperty()` or reflection to access/modify private state
+- Overriding a `private` or `protected` method from a parent class without documented justification
+
+**Code patterns to avoid:**
+```typescript
+// BAD — accessing private property
+export class MyDetailsComponent extends DetailsComponent {
+  ngOnInit(): void {
+    this._internalData = { … };  // DetailsComponent._internalData is private
+  }
+}
+
+// BAD — casting to any to bypass type safety
+const cache = (this.service as any)._cache;  // _cache is private
+
+// BAD — no documentation about fragility
+export class MyComponent extends BaseTabsComponent {
+  override protected getSelectedTabIndex(): number {
+    return this._selectedIndex;  // relying on internal property
+  }
+}
+```
+
+**Correct pattern — document, assert, and plan to remove:**
+
+```typescript
+export class MyDetailsComponent extends DetailsComponent {
+  // TODO: Extract this logic to public API in @c8y/ngx-components
+  // Issue: https://github.com/SoftwareAG/cumulocity-app-builder/issues/XXXXX
+  // Risk: This overrides private method '_initializeForm()'. Patch upgrades may break this.
+  override protected _initializeForm(): void {
+    super._initializeForm();
+    
+    // Assert that the internal structure hasn't changed
+    console.assert(
+      typeof (this as any)._formBuilder === 'function',
+      'Expected private _formBuilder method to exist on DetailsComponent'
+    );
+    
+    // Custom initialization
+    this._applyCustomValidation();
+  }
+
+  private _applyCustomValidation(): void { … }
+}
+```
+
+**Why this matters:**
+
+1. **Fragility:** Private APIs can change in any version (major, minor, or patch) without
+   backward-compatibility guarantees. Your code becomes brittle across upgrades.
+2. **Maintenance burden:** Every time `@c8y/ngx-components` is upgraded, the team must
+   review and test overridden private methods to ensure they still work.
+3. **Technical debt:** Overriding private APIs is a sign that the library's public API is
+   insufficient; this should be escalated as a feature request rather than worked around.
+4. **Coupling:** Tight coupling to implementation details makes refactoring the library
+   difficult and ties down future development.
+
+**Action items:**
+
+1. **File an issue** with Cumulocity requesting the required feature as part of the
+   public API, including use case and version context.
+2. **Document the override** with a `// TODO:` comment including:
+   - The reason for the override
+   - Link to the feature request issue
+   - Warning about upgrade risk
+3. **Add runtime assertions** (like `console.assert()`) to catch breaking changes early
+4. **Plan a removal strategy** — track when the public API is added, then remove the
+   override in the next major version bump
+
+**Checking for violations:**
+
+- Search for property/method names starting with `_` (underscore)
+- Look for `as any` casts combined with property access
+- Check for `Object.defineProperty()`, `Object.getOwnPropertyDescriptor()`, or reflection APIs
+- Review `override` keywords on `protected` or `private` methods in extended classes
+
+---
+
 ## Output Format
 
 For each file analyzed, produce a structured report:
@@ -710,5 +861,6 @@ For each file analyzed, produce a structured report:
 When the analysis involves:
 - **TypeScript types / generics** → consult [mastering-typescript](https://github.com/SpillwaveSolutions/mastering-typescript-skill/tree/main/mastering-typescript)
 - **Angular lifecycle / control flow / change detection** → fetch `https://angular.dev/assets/context/llms-full.txt`
+- **Angular style guide and conventions** → reference the version-specific style guide: `https://vMAJOR.angular.dev/style-guide` (e.g., `https://v20.angular.dev/style-guide` for Angular 20, `https://v19.angular.dev/style-guide` for Angular 19, or `https://angular.dev/style-guide` for the latest version)
 - **CSS utilities, design tokens, component APIs** → call `mcp_c8y-docs_query-codex` with relevant keywords
 - **C8Y REST API wrappers** → consult `skills/c8y-client-api/SKILL.md`
