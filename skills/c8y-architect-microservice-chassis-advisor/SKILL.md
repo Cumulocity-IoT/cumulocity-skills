@@ -47,17 +47,18 @@ Score the shortlisted options against the criteria below.
 |---|:---:|:---:|:---:|:---:|:---:|
 | **Team Skill Fit** | 🟢 Web / TS teams | 🟢 Web / TS teams | 🟡 Java specialists needed | 🟡 .NET specialists needed | 🟢 Broad — data, DevOps, web |
 | **Official Cumulocity Support** | 🟡 Community | 🟡 Community | 🟢 Official & fully supported | 🟡 Community | 🟡 Community |
-| **Cross-Cutting Features OOB** | 🟢 Comprehensive | 🟡 Basic | 🟢 Comprehensive | 🟢 Comprehensive | 🟡 Moderate |
-| **Resilience Patterns OOB** | 🟡 Via libraries | 🔴 Manual | 🟢 Resilience4j native | 🟢 Polly native | 🟡 Via `tenacity` |
-| **Observability** | 🟡 Via plugins | 🔴 Basic | 🟢 Actuator + Micrometer | 🟢 OpenTelemetry native | 🟡 Via libraries |
+| **Cross-Cutting Features OOB** | 🟢 Comprehensive | 🟢 Comprehensive | 🟢 Comprehensive | 🟢 Comprehensive | 🟡 Moderate |
+| **Resilience Patterns OOB** | 🟡 Via libraries | 🟡 Probes + libraries | 🟢 Resilience4j native | 🟢 Polly native | 🟡 Via `tenacity` |
+| **Observability** | 🟡 Via plugins | 🟢 Structured logging + OpenTelemetry | 🟢 Actuator + Micrometer | 🟢 OpenTelemetry native | 🟡 Via libraries |
 | **Runtime Throughput & CPU Efficiency** | 🟡 Medium | 🟢 High | 🟡 Medium | 🟢 High | 🟡 Medium |
 | **Memory & Docker Image Footprint** | 🟡 Medium | 🟢 Very Low | 🔴 High (JVM baseline) | 🟢 Low (🟢🟢 with AOT) | 🟡 Medium |
 | **Cold Start / Startup Time** | 🟡 Fast | 🟢 Very Fast | 🔴 Slow (JVM warm-up) | 🟡 Fast (🟢 Very Fast with AOT) | 🟢 Fast |
 | **Scalability & Concurrency Model** | 🟢 Async event-loop | 🟢 Async event-loop | 🟡 Thread-pool (reactive opt.) | 🟡 Thread-pool (async/await opt.) | 🟡 Async via asyncio |
 | **Type Safety** | 🟢 Strong (TypeScript) | 🟢 Strong (TypeScript) | 🟢 Strong (Java) | 🟢 Strong (C#) | 🟡 Partial (type hints, Pydantic) |
-| **AI / ML & Data Integration** | 🟡 Via npm libraries | 🔴 Minimal | 🟡 Via libraries (DL4J, Spring AI) | 🟡 Via NuGet (ML.NET) | 🟢 Native — NumPy, Pandas, PyTorch |
-| **Ecosystem Maturity & Community Size** | 🟢 Large | 🔴 Small / Early-stage | 🟢 Very Large | 🟢 Large | 🟢 Very Large |
-| **Long-term Commercial Backing** | 🟢 NestJS Inc. | 🟡 Nuxt Labs / community | 🟢 Broadcom (Spring) | 🟢 Microsoft | 🟢 PSF + broad industry |
+| **Boilerplate Required** | 🔴 Heavy | 🟢🟢 None | 🔴 Very Heavy | 🔴 Heavy | 🟢 Minimal |
+| **AI / ML & Data Integration** | 🟡 Via npm libraries | 🟡 Via npm libraries | 🟡 Via libraries (DL4J, Spring AI) | 🟡 Via NuGet (ML.NET) | 🟢 Native — NumPy, Pandas, PyTorch |
+| **Ecosystem Maturity & Community Size** | 🟢 Large | 🟡 Nitro strong; c8y-nitro niche | 🟢 Very Large | 🟢 Large | 🟢 Very Large |
+| **Long-term Commercial Backing** | 🟢 NestJS Inc. | 🟢 Vercel-backed Nuxt/Nitro ecosystem | 🟢 Broadcom (Spring) | 🟢 Microsoft | 🟢 PSF + broad industry |
 
 ---
 
@@ -68,8 +69,8 @@ Use these rules to short-circuit the matrix for common scenarios:
 | If… | Recommend |
 |---|---|
 | Team is Java-based **and** official support is required | **Spring Boot + Java SDK** — only officially supported chassis |
-| Team is TypeScript/Node and service will be long-lived, structured, and multi-protocol | **NestJS + @c8y/client** — best DX, observability, and ecosystem for TS |
-| Service is edge-deployed, resource-constrained, or a rapid PoC | **Nitro + c8y-nitro** — smallest footprint, fastest cold start |
+| Team is TypeScript/Node and service will be long-lived, structured, and multi-protocol | **NestJS + @c8y/client** — strongest TS framework conventions and broad ecosystem for larger services |
+| Service is resource-constrained, startup-sensitive, or needs fast iteration with strong C8Y batteries included | **Nitro + c8y-nitro** — very small footprint, very fast startup, and strong built-in Cumulocity ergonomics |
 | Team is .NET/C# and throughput / image size matters | **.NET Generic Host + C# SDK** — especially strong with AOT compilation |
 | Service involves AI/ML, data enrichment, or analytics | **Python + FastAPI** — unmatched data science ecosystem |
 | Mixed team with no dominant skill and time-to-market pressure | **NestJS** (broad TypeScript adoption) or **Python + FastAPI** (low ramp-up) |
