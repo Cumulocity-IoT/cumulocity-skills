@@ -51,8 +51,8 @@ Score the shortlisted options against the criteria below.
 | **Resilience Patterns OOB** | 🟡 Via libraries | 🟡 Probes + libraries | 🟢 Resilience4j native | 🟢 Polly native | 🟡 Via `tenacity` |
 | **Observability** | 🟡 Via plugins | 🟢 Structured logging + OpenTelemetry | 🟢 Actuator + Micrometer | 🟢 OpenTelemetry native | 🟡 Via libraries |
 | **Runtime Throughput & CPU Efficiency** | 🟡 Medium | 🟢 High | 🟡 Medium | 🟢 High | 🟡 Medium |
-| **Memory & Docker Image Footprint** | 🟡 Medium | 🟢 Very Low | 🔴 High (JVM baseline) | 🟢 Low (🟢🟢 with AOT) | 🟡 Medium |
-| **Cold Start / Startup Time** | 🟡 Fast | 🟢 Very Fast | 🔴 Slow (JVM warm-up) | 🟡 Fast (🟢 Very Fast with AOT) | 🟢 Fast |
+| **Memory & Docker Image Footprint** | 🟡 Medium | 🟢 Very Low | 🔴 High (🟢 Low with Spring Boot AOT) | 🟢 Low (🟢🟢 with AOT) | 🟡 Medium |
+| **Cold Start / Startup Time** | 🟡 Fast | 🟢 Very Fast | 🔴 Slow (🟢 Very Fast with GraalVM) | 🟡 Fast (🟢 Very Fast with AOT) | 🟢 Fast |
 | **Scalability & Concurrency Model** | 🟢 Async event-loop | 🟢 Async event-loop | 🟡 Thread-pool (reactive opt.) | 🟡 Thread-pool (async/await opt.) | 🟡 Async via asyncio |
 | **Type Safety** | 🟢 Strong (TypeScript) | 🟢 Strong (TypeScript) | 🟢 Strong (Java) | 🟢 Strong (C#) | 🟡 Partial (type hints, Pydantic) |
 | **Boilerplate Required** | 🔴 Heavy | 🟢🟢 None | 🔴 Very Heavy | 🔴 Heavy | 🟢 Minimal |
@@ -75,7 +75,11 @@ Use these rules to short-circuit the matrix for common scenarios:
 | Service involves AI/ML, data enrichment, or analytics | **Python + FastAPI** — unmatched data science ecosystem |
 | Mixed team with no dominant skill and time-to-market pressure | **NestJS** (broad TypeScript adoption) or **Python + FastAPI** (low ramp-up) |
 | Enterprise governance requires a supported SLA | **Spring Boot + Java SDK** — only option with official Cumulocity backing |
-
+| Service involves complex business logic and heavy compute power for data analytics, image processing etc. | **Spring Boot + Java SDK** or **.NET Generic Host + C# SDK** — better suited for CPU-intensive workloads with enterprise-grade multi-threading |
+| Service is I/O-heavy but not CPU-bound (e.g. API gateway, protocol translator) | **Nitro + c8y-nitro** — efficient async I/O with strong Cumulocity integration |
+| Service handles and processes JSON-heavy data transformations | **Nitro + c8y-nitro** — efficient async I/O with strong Cumulocity integration |
+| Service needs many enterprise integrations (databases, message queues, external APIs) | **Spring Boot + Java SDK** or **.NET Generic Host + C# SDK** — mature ecosystems with extensive integration libraries |
+| Service needs fast development and deployment for a PoC or MVP | **Nitro + c8y-nitro** or **Python + FastAPI** — minimal boilerplate and fast iteration cycles |
 ---
 
 ### Step 4 — Formulate a Recommendation
