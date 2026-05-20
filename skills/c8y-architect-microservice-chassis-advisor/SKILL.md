@@ -93,6 +93,12 @@ Structure your response as follows:
 
 ---
 
+## Bundled Assets
+
+| Asset | When to load |
+|-------|-------------|
+| [`references/dx.md`](references/dx.md) | Use this if you want a detailed comparison of developer experience across different ecosystems |
+
 ## Resource Links
 
 | Chassis | Starter / Docs |
