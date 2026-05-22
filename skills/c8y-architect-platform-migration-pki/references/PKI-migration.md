@@ -10,7 +10,7 @@ The migration follows a phased, throttled approach to transition devices without
 
 ### Single-Device Migration Lifecycle
 
-For any single gateway, the transition moves through five distinct execution gates:
+For any single gateway, the transition moves through six distinct execution steps:
 
 ```mermaid
 flowchart TD
