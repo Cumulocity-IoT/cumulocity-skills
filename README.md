@@ -60,6 +60,7 @@ Architecture Skills:
 | Skill | Path | Summary |
 |---|---:|---|
 | Chassis Advisor | `skills/c8y-architect-microservice-chassis-advisor/SKILL.md` | Decision matrix and recommendation workflow for microservice chassis selection. |
+| Platform Migration PKI | `skills/c8y-architect-platform-migration-pki/SKILL.md` | Best practices and approaches for migrating PKI certificates to Cumulocity. |
 
 
 ---
