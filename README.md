@@ -38,6 +38,8 @@ npx skills add Cumulocity-IoT/cumulocity-skills
 
 ## Available Skills
 
+Frontend Skills:
+
 | Skill | Path | Summary |
 |---|---:|---|
 | C8Y Client API Reference | `skills/c8y-client-api/SKILL.md` | `@c8y/client` services, methods, and endpoint usage patterns. |
@@ -52,6 +54,14 @@ npx skills add Cumulocity-IoT/cumulocity-skills
 | Web SDK 1023 Upgrade | `skills/websdk-1023-upgrade/SKILL.md` | Version-specific guidance for upgrading to Web SDK 1023. |
 | Web SDK Breaking Changelog | `skills/websdk-breaking-changelog/SKILL.md` | Breaking changes for Web SDK / `@c8y/ngx-components`. |
 | Web SDK Version Map | `skills/websdk-version-map/SKILL.md` | Version mapping context used during upgrade planning. |
+
+Architecture Skills:
+
+| Skill | Path | Summary |
+|---|---:|---|
+| Chassis Advisor | `skills/c8y-architect-microservice-chassis-advisor/SKILL.md` | Decision matrix and recommendation workflow for microservice chassis selection. |
+| Platform Migration PKI | `skills/c8y-architect-platform-migration-pki/SKILL.md` | Best practices and approaches for migrating PKI certificates to Cumulocity. |
+
 
 ---
 
