@@ -819,6 +819,52 @@ export class MyDetailsComponent extends DetailsComponent {
 
 ---
 
+### AP-23 · Checking HTTP Status Code on Resolved `@c8y/client` Service Responses
+
+**Rule:** Do not check the `res.status` (or `res.res.status`) of a resolved response from
+any `@c8y/client` service (e.g. `InventoryService`, `AlarmService`, `EventService`,
+`MeasurementService`, `OperationService`, etc.) to verify it equals `200`/`201`/`ok`. If the promise
+resolves, the request was successful — non-2xx responses cause the promise to reject, so
+a status check in the success path is always vacuously true and adds noise.
+
+**Signals of violation:**
+- `if (res.res.status === 200)` after `await inventoryService.detail(id)`
+- `if (response.status === 200)` after any `@c8y/client` service call
+- Conditional logic that branches on `=== 200` / `!== 200` inside a `.then()` handler
+
+**Fix:**
+```typescript
+// BAD — status check is redundant; promise already rejected on non-200
+const res = await this.inventoryService.detail(id);
+if (res.res.status === 200) {
+  this.device = res.data;
+}
+
+// GOOD — if we got here, the call succeeded
+const { data } = await this.inventoryService.detail(id);
+this.device = data;
+```
+
+```typescript
+// BAD — conditional on status inside .then()
+this.alarmService.list(filter).then(res => {
+  if (res.res.status === 200) {
+    this.alarms = res.data;
+  }
+});
+
+// GOOD
+this.alarmService.list(filter).then(({ data }) => {
+  this.alarms = data;
+});
+```
+
+**Why:** `@c8y/client` service methods throw (reject the promise) on any non-successful
+HTTP response. The resolved value's status is always a success code, making the check
+both redundant and misleading — it implies a failure branch that can never be reached.
+
+---
+
 ## Output Format
 
 For each file analyzed, produce a structured report:
