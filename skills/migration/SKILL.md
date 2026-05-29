@@ -46,8 +46,8 @@ Before starting, identify:
 
 | Variable | Description | Example |
 |---|---|---|
-| `FROM_VERSION` | Your current `@c8y/ngx-components` version | `2025-lts`, `1021.22.50` |
-| `TO_VERSION` | The target SDK version | `2026-lts`, `cd` |
+| `FROM_VERSION` | Your current `@c8y/ngx-components` version | `y2025-lts`, `1021.22.50` |
+| `TO_VERSION` | The target SDK version | `y2026-lts`, `cd` |
 | `PROJECT_ROOT` | Absolute path to the app you are migrating | `/home/user/my-c8y-app` |
 
 To find your current version:
@@ -83,6 +83,20 @@ pnpm build
 ```
 
 ### Run the report
+
+The CLI accepts several version alias formats for `--from` and `--to`:
+
+| Format | Examples |
+|---|---|
+| LTS alias | `y2025-lts`, `y2026-lts` |
+| Year alias | `y2025`, `y2026` |
+| Minor / stable line | `1021`, `1023`, `1021.22` |
+| Full patch version | `1021.22.145`, `1023.13.2` |
+| Continuous delivery | `cd` — resolves to the current latest tag on npm |
+
+> **Version format**: use the `y`-prefixed dist-tag form (`y2026-lts`) — this is what
+> `npm dist-tags @c8y/websdk` will show and what the breaking-changes-cli resolves against.
+> The un-prefixed form (`2026-lts`) is also accepted by the CLI but is not a real npm tag.
 
 ```bash
 # Human-readable overview
@@ -125,7 +139,7 @@ project being migrated:
 ```bash
 mkdir /tmp/c8y-reference-app
 cd /tmp/c8y-reference-app
-# … follow new-app skill steps with ng add @c8y/websdk@<TO_VERSION>
+# … follow new-app skill steps with ng add @c8y/websdk@<TO_VERSION> (e.g. y2026-lts)
 ```
 
 The reference app provides the canonical shape of every generated file at the target
@@ -209,7 +223,8 @@ Pay special attention to:
 - **AP-01** — replace any leftover `*ngIf` / `*ngFor` / `*ngSwitch` with Angular's new
   control flow syntax (`@if`, `@for`, `@switch`) if the target version supports it.
 - **AP-02** — excessive logic in components that should be moved to services.
-- Any Cumulocity-specific anti-patterns flagged by the `mcp_c8y-docs_query-codex` queries.
+- Any Cumulocity-specific anti-patterns flagged by the `mcp_c8y-docs_query-codex` queries
+  (MCP server: `https://c8y-codex-mcp.schplitt.workers.dev/` — see `AGENTS.md` for setup).
 
 Address all `BREAKING` and `HIGH` severity findings before considering the migration done.
 

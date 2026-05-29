@@ -37,6 +37,14 @@ codebases. It combines guidance from:
 2. **Angular documentation** — fetch `https://angular.dev/assets/context/llms-full.txt`
 3. **Cumulocity Codex** — use the `mcp_c8y-docs_*` MCP tools to retrieve component and API references
 
+> **MCP server required:** The `mcp_c8y-docs_*` tools are served by
+> `https://c8y-codex-mcp.schplitt.workers.dev/` (server name: `c8y-docs`, transport: HTTP).
+> Register it once with your agent:
+> ```bash
+> claude mcp add --transport http c8y-docs https://c8y-codex-mcp.schplitt.workers.dev/
+> ```
+> See `AGENTS.md` for full setup instructions and alternative config formats.
+
 ---
 
 ## How to Run an Analysis
@@ -50,7 +58,8 @@ Before analyzing any file, load the following resources in parallel:
 3. Call `mcp_c8y-docs_get-codex-structure` to get the full Codex map
 4. Call `mcp_c8y-docs_query-codex` with queries relevant to the features used in the
    file under review (e.g. `["css utility classes spacing", "color tokens", "widgets lazy loading"]`)
-5. Read `skills/c8y-client-api/SKILL.md` for C8Y SDK usage validation
+5. Call `mcp_c8y-docs_query-codex` with queries for the C8Y SDK services in scope
+   (e.g. `["InventoryService", "AlarmService", "MeasurementService client"]`) to validate API usage
 
 ### Step 2 — Identify Files to Analyze
 
@@ -278,8 +287,9 @@ ngOnInit(): void {
 **Rule:** Never use Angular's `HttpClient` or `FetchClient` for Cumulocity REST API calls
 that are already wrapped by a service in `@c8y/client`. Only ok if used for microservice queries (baseUrl contains `/service`).
 
-Consult the `c8y-client-api` skill (`skills/c8y-client-api/SKILL.md`) for the full list
-of covered domains: inventory, alarms, events, measurements, operations, binary, users, …
+Use `mcp_c8y-docs_query-codex` to look up the relevant `@c8y/client` service for the domain in
+question (e.g. `["InventoryService REST"]`, `["AlarmService client"]`). Covered domains include:
+inventory, alarms, events, measurements, operations, binary, users, and more.
 
 ```typescript
 // BAD — HttpClient used for inventory
@@ -909,4 +919,4 @@ When the analysis involves:
 - **Angular lifecycle / control flow / change detection** → fetch `https://angular.dev/assets/context/llms-full.txt`
 - **Angular style guide and conventions** → reference the version-specific style guide: `https://vMAJOR.angular.dev/style-guide` (e.g., `https://v20.angular.dev/style-guide` for Angular 20, `https://v19.angular.dev/style-guide` for Angular 19, or `https://angular.dev/style-guide` for the latest version)
 - **CSS utilities, design tokens, component APIs** → call `mcp_c8y-docs_query-codex` with relevant keywords
-- **C8Y REST API wrappers** → consult `skills/c8y-client-api/SKILL.md`
+- **C8Y REST API wrappers** → call `mcp_c8y-docs_query-codex` with the service name (e.g. `["InventoryService"]`)

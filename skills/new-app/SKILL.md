@@ -124,7 +124,7 @@ ng add @c8y/websdk@y2025-lts \
 Where:
 - `<appName>` must be one of: `administration`, `application`, `cockpit`, `codex`,
   `devicemanagement`, `hybrid`, `package-blueprint`, `tutorial`, `sample-plugin`
-- `<version>` is the exact package version from npm (e.g. `1.0.0`)
+- `<version>` is the exact package version from npm (e.g. `1021.22.163`) — resolve it with `npm view @c8y/websdk@<dist-tag> version`
 
 **Example — cockpit base at 2025-lts:**
 
@@ -146,7 +146,7 @@ coding assistants. This step is optional but strongly recommended.
 Passing `--skip-confirmation` skips AI tool setup automatically:
 
 ```bash
-ng add @c8y/websdk --application=@c8y/cockpit@1.0.0 --skip-confirmation
+ng add @c8y/websdk@y2025-lts --application=@c8y/cockpit@$(npm view @c8y/websdk@y2025-lts version) --skip-confirmation
 ```
 
 ### Configure specific AI tools non-interactively

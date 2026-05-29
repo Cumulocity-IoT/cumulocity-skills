@@ -276,9 +276,10 @@ Use this when the language is **not** in the built-in list (e.g. Italian, Arabic
 ### 6a — Download the framework's master `.pot`
 
 ```bash
-curl -O https://unpkg.com/@c8y/ngx-components@latest/locales/locales.pot
+mkdir -p ./locales
+curl -o ./locales/framework.pot https://unpkg.com/@c8y/ngx-components@latest/locales/locales.pot
 # For a specific version (>= 1004.0.6):
-curl -O https://unpkg.com/@c8y/ngx-components@1023.0.0/locales/locales.pot
+curl -o ./locales/framework.pot https://unpkg.com/@c8y/ngx-components@1023.0.0/locales/locales.pot
 ```
 
 ### 6b — Extract app-specific strings
@@ -291,7 +292,7 @@ ng extract-i18n
 ### 6c — Merge both `.pot` files
 
 ```bash
-msgcat -o ./locales/merged.pot ~/Downloads/locales.pot ./locales/locales.pot
+msgcat -o ./locales/merged.pot ./locales/framework.pot ./locales/locales.pot
 ```
 
 ### 6d — Create the `.po` file for the new language
