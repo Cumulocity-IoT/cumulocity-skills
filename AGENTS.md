@@ -4,41 +4,54 @@ This repository contains modular Cumulocity skills under `skills/`.
 
 ## Project Structure
 
-- `skills/c8y-client-api/SKILL.md`
-  - Reference for `@c8y/client` services, methods, and API usage patterns.
-- `skills/c8y-client-breaking-changelog/SKILL.md`
-  - Breaking changes for `@c8y/client` across versions.
-- `skills/c8y-client-migration-analysis/SKILL.md`
-  - End-to-end migration audit workflow. Pulls context from changelog and API skills.
 - `skills/code-quality-analysis/SKILL.md`
   - Code quality review workflow for Angular + Cumulocity projects. References external and local guidance.
-- `skills/websdk-1018-upgrade/SKILL.md` to `skills/websdk-1023-upgrade/SKILL.md`
-  - Version-specific Web SDK upgrade guidance.
-- `skills/websdk-breaking-changelog/SKILL.md`
-  - Breaking changes for Web SDK / `@c8y/ngx-components`.
-- `skills/websdk-version-map/SKILL.md`
-  - Version mapping context used during upgrade planning.
+- `skills/new-app/SKILL.md`
+  - Scaffold a new Cumulocity application with `@c8y/websdk` fully non-interactively. Covers Angular CLI setup, schematic installation, AI tools configuration, dev server, and build commands.
+- `skills/migration/SKILL.md`
+  - End-to-end migration guide: detect breaking changes with the `ui-breaking-changes-cli`, scaffold a reference app at the target version with the `new-app` skill, compare key config files, and finish with a `code-quality-analysis` review.
+- `skills/internationalization/SKILL.md`
+  - Complete i18n guide: annotate strings with `gettext()` / `translate` pipe / directive, extract to `.pot`, create and update `.po` files, override built-in translations, and add brand-new languages including the merged-`.pot` workflow.
+
+## MCP Server — Cumulocity Codex
+
+Several skills call `mcp_c8y-docs_*` tools to query the Cumulocity Codex documentation
+at runtime. These tools are provided by a hosted MCP server:
+
+| Property | Value |
+|---|---|
+| **Server name** | `c8y-docs` |
+| **Transport** | HTTP (SSE) |
+| **URL** | `https://c8y-codex-mcp.schplitt.workers.dev/` |
+
+**Add it to your agent once before using these skills:**
+
+```bash
+# Claude Code
+claude mcp add --transport http c8y-docs https://c8y-codex-mcp.schplitt.workers.dev/
+```
+
+Or add it to your agent's MCP config file (e.g. `.mcp.json` for Claude Code projects):
+
+```json
+{
+  "mcpServers": {
+    "c8y-docs": {
+      "url": "https://c8y-codex-mcp.schplitt.workers.dev/"
+    }
+  }
+}
+```
+
+Once registered, the agent can call:
+- `mcp_c8y-docs_get-codex-structure` — returns the full Codex section/subsection map
+- `mcp_c8y-docs_query-codex` — keyword search across all Cumulocity documentation
+
+---
 
 ## Agent Usage Recommendation
 
-Start with analysis skills first, because they are orchestration skills that reference other skills and define execution order:
-
-1. Use `c8y-client-migration-analysis` for upgrade impact and migration audits.
-2. Use `code-quality-analysis` for implementation quality, anti-patterns, and refactoring recommendations.
-
-These analysis skills should be treated as entry points; they direct you to supporting skills like:
-
-- `c8y-client-breaking-changelog`
-- `websdk-breaking-changelog`
-- version-specific `websdk-10xx-upgrade` skills
-- `c8y-client-api`
-- `websdk-version-map`
-
-## Practical Flow
-
-For upgrade work, follow this sequence:
-
-1. Load `c8y-client-migration-analysis`.
-2. Read referenced breaking changelog and target-version upgrade skills.
-3. Use `c8y-client-api` and `websdk-version-map` to validate findings.
-4. Run `code-quality-analysis` on changed files before finalizing recommendations.
+- Use `new-app` to scaffold a new Cumulocity application non-interactively.
+- Use `code-quality-analysis` for implementation quality, anti-patterns, and refactoring recommendations.
+- Use `migration` to upgrade an existing Cumulocity application to a new SDK version end-to-end.
+- Use `internationalization` to add or override translations, wire up new languages, or set up the full gettext extraction and `.po` file workflow.
