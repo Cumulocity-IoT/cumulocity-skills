@@ -5,7 +5,7 @@ description: |
   human interaction. Covers Angular CLI installation, app generation, schematic setup,
   AI tools configuration, dev server, and build commands. Triggers: new app, scaffold,
   create application, ng add websdk, setup cumulocity app, new cumulocity project.
-version: 1.0.0
+version: 1.0.1
 category: scaffolding
 triggers:
   - new app
@@ -37,13 +37,13 @@ dev server **without any interactive prompts**.
 
 ## Step 1 — Install Angular CLI
 
-Install the Angular 16 CLI globally:
+Install the Angular 20 CLI globally:
 
 ```bash
-npm install @angular/cli@v16-lts -g
+npm install @angular/cli@v20-lts -g
 ```
 
-> **Why Angular 16?** The `@c8y/websdk` schematic currently targets Angular 16.
+> **Why Angular 20?** The `@c8y/websdk` schematic currently targets Angular 20.
 
 ---
 
@@ -95,14 +95,14 @@ Common dist-tags:
 | Tag | Meaning |
 |---|---|
 | `latest` | Current stable release |
-| `y2025-lts` | 2025 Long-Term Support line |
 | `y2026-lts` | 2026 Long-Term Support line |
+| `y2025-lts` | 2025 Long-Term Support line |
 | `next` | Pre-release / RC channel |
 
 Pass the tag directly to `ng add`:
 
 ```bash
-ng add @c8y/websdk@y2025-lts
+ng add @c8y/websdk@y2026-lts
 ```
 
 Or pin to an exact version:
@@ -116,21 +116,20 @@ ng add @c8y/websdk@1023.14.131
 Use `--application` + `--skip-confirmation` to bypass all prompts:
 
 ```bash
-ng add @c8y/websdk@y2025-lts \
+ng add @c8y/websdk@y2026-lts \
   --application=@c8y/<appName>@<version> \
   --skip-confirmation
 ```
 
 Where:
-- `<appName>` must be one of: `administration`, `application`, `cockpit`, `codex`,
-  `devicemanagement`, `hybrid`, `package-blueprint`, `tutorial`, `sample-plugin`
-- `<version>` is the exact package version from npm (e.g. `1021.22.163`) — resolve it with `npm view @c8y/websdk@<dist-tag> version`
+- `<appName>` must be one of (sorted by highest priority): `sample-plugin`,`application`,`cockpit`,`tutorial`,`administration`,`codex`,`devicemanagement`, `hybrid`, `package-blueprint` 
+- `<version>` is the exact package version from npm (e.g. `1023.14.160`) — resolve it with `npm view @c8y/websdk@<dist-tag> version`
 
-**Example — cockpit base at 2025-lts:**
+**Example — cockpit base at 2026-lts:**
 
 ```bash
-ng add @c8y/websdk@y2025-lts \
-  --application=@c8y/cockpit@$(npm view @c8y/websdk@y2025-lts version) \
+ng add @c8y/websdk@y2026-lts \
+  --application=@c8y/sample-plugin@1023.14.160 \
   --skip-confirmation
 ```
 
@@ -146,7 +145,7 @@ coding assistants. This step is optional but strongly recommended.
 Passing `--skip-confirmation` skips AI tool setup automatically:
 
 ```bash
-ng add @c8y/websdk@y2025-lts --application=@c8y/cockpit@$(npm view @c8y/websdk@y2025-lts version) --skip-confirmation
+ng add @c8y/websdk@y2026-lts --application=@c8y/cockpit@$(npm view @c8y/websdk@y2026-lts version) --skip-confirmation
 ```
 
 ### Configure specific AI tools non-interactively
@@ -157,7 +156,7 @@ Use the `--ai-tools` flag with a comma-separated list of tool names:
 ng add @c8y/websdk --ai-tools=claude,github-copilot,gemini
 ```
 
-Valid tool names: `claude`, `github-copilot`, `cursor`, `jetbrains-ai`, `windsurf`, `gemini`
+Valid tool names: `claude`, `github-copilot`, `gemini`
 
 To explicitly opt out:
 
@@ -174,9 +173,6 @@ ng add @c8y/websdk --ai-tools=none
 |---|---|
 | **Claude** | `.claude/CLAUDE.md`, `.claude/rules/*.instructions.md` |
 | **GitHub Copilot** | `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md` |
-| **Cursor** | `.cursor/rules/cursor.mdc`, `.cursor/rules/*.mdc` |
-| **Windsurf** | `.windsurf/rules/guidelines.md`, `.windsurf/rules/*.md` |
-| **JetBrains AI** | `.junie/guidelines.md` (all rules merged into one file) |
 | **Gemini** | `.gemini/GEMINI.md`, `.gemini/rules/*.instructions.md` |
 
 Each tool receives the same core content adapted to its configuration format:
@@ -216,7 +212,7 @@ Copy-paste sequence for a fully automated setup:
 
 ```bash
 # 1. Install Angular CLI (once per machine)
-npm install @angular/cli@v16-lts -g
+npm install @angular/cli@v20-lts -g
 
 # 2. Scaffold the app
 ng new my-app \
@@ -232,10 +228,10 @@ ng new my-app \
 cd my-app
 
 # 4. Resolve target version
-C8Y_VERSION=$(npm view @c8y/websdk@y2025-lts version)
+C8Y_VERSION=$(npm view @c8y/websdk@y2026-lts version)
 
 # 5. Add websdk schematic (no prompts, configure GitHub Copilot + Claude)
-ng add @c8y/websdk@y2025-lts \
+ng add @c8y/websdk@y2026-lts \
   --application=@c8y/cockpit@${C8Y_VERSION} \
   --ai-tools=github-copilot,claude
 
