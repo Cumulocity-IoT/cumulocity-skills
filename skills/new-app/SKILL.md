@@ -57,7 +57,7 @@ ng new <appName> \
   --routing=true \
   --ssr=false \
   --skip-git=true \
-  --package-manager=pnpm \
+  --package-manager=npm \
   --interactive=false \
   --defaults
 ```
@@ -68,7 +68,7 @@ ng new <appName> \
 | `--routing=true` | Angular Router module pre-configured |
 | `--ssr=false` | No server-side rendering (not supported by the platform) |
 | `--skip-git=true` | Skip git init (manage VCS separately) |
-| `--package-manager=pnpm` | Use pnpm (preferred; faster installs, better deduplication) |
+| `--package-manager=npm` | For pure scaffolding use npm in a migration context, but for new project prefer pnpm as faster installs, better security) |
 | `--interactive=false` | Fully non-interactive — no prompts |
 | `--defaults` | Accept all remaining defaults |
 
@@ -220,7 +220,7 @@ ng new my-app \
   --routing=true \
   --ssr=false \
   --skip-git=true \
-  --package-manager=pnpm \
+  --package-manager=npm \
   --interactive=false \
   --defaults
 
