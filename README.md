@@ -1,4 +1,4 @@
-# cumulocity-skills
+# cumulocity-skills-community
 
 Machine-readable Agent Skills with modular guidance, examples, and best practices you can add to your agent.
 Currently consisting of skills for scaffolding new Cumulocity apps, SDK migration, internationalization, code quality analysis, and architecture decisions.
